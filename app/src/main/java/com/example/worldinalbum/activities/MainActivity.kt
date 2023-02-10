@@ -1,5 +1,6 @@
 package com.example.worldinalbum.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
@@ -20,5 +21,9 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.main_fragment_container)
 
         bottomNavigationView.setupWithNavController(navController)
+
+        binding.mainTopSearchButton.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
     }
 }
