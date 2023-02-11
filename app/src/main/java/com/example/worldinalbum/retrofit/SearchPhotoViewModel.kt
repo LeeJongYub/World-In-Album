@@ -30,9 +30,11 @@ class SearchPhotoViewModel : ViewModel() {
             val likesCount = dataItem.likes
             // 유저이름
             val userName = dataItem.user.username
+            // 사진
+            val thumbImage = dataItem.urls.thumb
 
             // 원하는 데이터 형식(RecommendSearchData)으로 데이터를 넣고,
-            val dataIWant = RecommendSearchData(userName,createDate,likesCount)
+            val dataIWant = RecommendSearchData(userName,createDate,likesCount, thumbImage)
 
             // 데이터리스트
             searchDataList.add(dataIWant)

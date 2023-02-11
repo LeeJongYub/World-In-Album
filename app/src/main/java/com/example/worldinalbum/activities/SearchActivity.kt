@@ -17,8 +17,13 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backToMainButton.setOnClickListener {
+            finish()
+        }
+
         // 검색어 뷰 호출
         val searchEdit = binding.searchEditText
+
 
         // 검색버튼 누를 시, 검색한 텍스트 전송
         binding.searchButton.setOnClickListener {
