@@ -47,12 +47,12 @@ class MainPickFragment : Fragment(){
         getUrls.add(url.toString())
         Log.d("getUrls", getUrls.toString())
 
-        mainPickAdapter = MainPickAdapter(getUrls)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mainPickAdapter = MainPickAdapter(getUrls)
 
         val mainPickRv = binding.mainPickFragRecyclerview
 
