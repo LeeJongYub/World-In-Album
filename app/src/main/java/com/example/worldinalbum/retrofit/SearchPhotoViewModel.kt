@@ -15,14 +15,18 @@ class SearchPhotoViewModel : ViewModel() {
     private val searchDataList = ArrayList<RecommendSearchData>()
 
     private var _photoLiveData = MutableLiveData<List<RecommendSearchData>>()
-    val photoLiveData : LiveData<List<RecommendSearchData>> get() = _photoLiveData
+    val photoLiveData: LiveData<List<RecommendSearchData>> get() = _photoLiveData
 
-    fun viewModelGetPhoto(searchTerm : String) = viewModelScope.launch {
+    fun viewModelGetPhoto(searchTerm: String) = viewModelScope.launch {
         val data = repository.repositoryGetPhoto(searchTerm)
+        Log.d("searchData", data.toString())
 
         // 데이터 가공을 위한 for 문
-        for(dataItem in data.results) {
-            Log.d("searchData", dataItem.toString()) // Result(createdAt=2018-02-05T16:58:13Z, id=Mv9hjnEUHR4, likes=2908, tags=[Tag(source=Source
+        for (dataItem in data.results) {
+            Log.d(
+                "searchData_for",
+                dataItem.toString()
+            ) // Result(createdAt=2018-02-05T16:58:13Z, id=Mv9hjnEUHR4, likes=2908, tags=[Tag(source=Source
 
             // 업로드 날짜
             val createDate = dataItem.createdAt
@@ -34,9 +38,9 @@ class SearchPhotoViewModel : ViewModel() {
             val thumbImage = dataItem.urls.thumb
 
             // 원하는 데이터 형식(RecommendSearchData)으로 데이터를 넣고,
-            val dataIWant = RecommendSearchData(userName,createDate,likesCount, thumbImage)
+            val dataIWant = RecommendSearchData(userName, createDate, likesCount, thumbImage)
 
-            // 데이터리스트
+            // 데이터리스트에 데이터형식을 넣어줌
             searchDataList.add(dataIWant)
 
         }

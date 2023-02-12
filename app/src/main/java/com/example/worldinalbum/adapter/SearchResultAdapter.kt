@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.constants.MyApp
+import com.example.worldinalbum.fragment.MainPickFragment
 import com.example.worldinalbum.model.RecommendSearchData
 
 class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
@@ -16,6 +17,8 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
 
     // '좋아요' 클릭한 사진을 담아둘 리스트
     val selectImageList = ArrayList<String>()
+    // '좋아요' 클릭 여부에 따라 MainPickFragment 에 하트 표시할 용도
+//    val selectBooleanList = ArrayList<Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,7 +33,7 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
             .into(holder.searchImage)
 
 
-        val likeButtonImage = holder.likeButton
+        val likeButtonImage = holder.searchlikeButton
         val selectedItemsImageUrl = dataList[position].thumbnail
 
         // 리사이클러뷰의 뷰 재활용 특성을 고려하여, 클릭과 무관하게 이미지 처리를 위해 구현
@@ -55,6 +58,8 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
             }
 
         Log.d("selectImageList", selectImageList.toString())
+
+            MainPickFragment().getImageUrl(selectImageList)
         }
     }
 
@@ -64,6 +69,7 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
 
     inner class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val searchImage = itemView.findViewById<ImageView>(R.id.search_result_image_item)
-        val likeButton = itemView.findViewById<ImageView>(R.id.search_result_likes_item)
+        val searchlikeButton = itemView.findViewById<ImageView>(R.id.search_result_likes_item)
     }
+
 }

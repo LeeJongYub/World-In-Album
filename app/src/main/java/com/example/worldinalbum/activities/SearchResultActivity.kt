@@ -6,10 +6,8 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.worldinalbum.adapter.SearchResultAdapter
 import com.example.worldinalbum.databinding.ActivitySearchResultBinding
-import com.example.worldinalbum.model.RecommendSearchData
 import com.example.worldinalbum.retrofit.SearchPhotoViewModel
 
 class SearchResultActivity : AppCompatActivity() {
@@ -34,7 +32,7 @@ class SearchResultActivity : AppCompatActivity() {
 
         Log.d("searchResult", getSearchEdit) // 받아온 검색어 확인용 로그
 
-        // api 콜
+        // api
         viewModel.viewModelGetPhoto(getSearchEdit)
 
         val searchResultRV = binding.searchResultRecyclerview
@@ -42,8 +40,10 @@ class SearchResultActivity : AppCompatActivity() {
         viewModel.photoLiveData.observe(this, Observer {
             searchResultAdapter = SearchResultAdapter(it)
             searchResultRV.adapter = searchResultAdapter
-            searchResultRV.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+            searchResultRV.layoutManager =
+                GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         })
 
     }
+
 }
