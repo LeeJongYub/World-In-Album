@@ -15,6 +15,7 @@ class SearchPhotoViewModel : ViewModel() {
     private val searchDataList = ArrayList<RecommendSearchData>()
 
     private var _photoLiveData = MutableLiveData<List<RecommendSearchData>>()
+
     val photoLiveData: LiveData<List<RecommendSearchData>> get() = _photoLiveData
 
     fun viewModelGetPhoto(searchTerm: String) = viewModelScope.launch {
@@ -36,6 +37,7 @@ class SearchPhotoViewModel : ViewModel() {
             val userName = dataItem.user.username
             // 사진
             val thumbImage = dataItem.urls.thumb
+
 
             // 원하는 데이터 형식(RecommendSearchData)으로 데이터를 넣고,
             val dataIWant = RecommendSearchData(userName, createDate, likesCount, thumbImage)

@@ -38,6 +38,8 @@ class SearchResultActivity : AppCompatActivity() {
         val searchResultRV = binding.searchResultRecyclerview
 
         viewModel.photoLiveData.observe(this, Observer {
+
+
             searchResultAdapter = SearchResultAdapter(it)
             searchResultRV.adapter = searchResultAdapter
             searchResultRV.layoutManager =
