@@ -1,10 +1,6 @@
 package com.example.worldinalbum.activities
 
-import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -18,7 +14,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -67,13 +62,25 @@ class SearchResultDetailActivity : AppCompatActivity() {
 
         // 사진 공유하기 기능 구현하기!
         binding.searchResultDetailShareButton.setOnClickListener {
+
+            // 사진 url 주소를 클립보드에 저장
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val copyUri: Uri = Uri.parse("$imageData")
+
+            val clip: ClipData = ClipData.newUri(contentResolver, "image_url", copyUri)
+            clipboard.setPrimaryClip(clip)
+
+
+            // 사진 공유하기 - 인탠트
             val intent = Intent(Intent.ACTION_SEND)
             // 이미지 uri
             val uri: Uri = Uri.parse(imageData.toString())
+            Log.d("url", uri.toString())
 
-            intent.type = ("image/*")
+            intent.type = ("$imageData")
+            Log.d("url", intent.type.toString())
             intent.putExtra(Intent.EXTRA_STREAM, uri)
-            startActivity(Intent.createChooser(intent, "Share img"))
+            startActivity(Intent.createChooser(intent, imageData.toString()))
         }
 
 
