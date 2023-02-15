@@ -17,7 +17,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.backToMainButton.setOnClickListener {
+        binding.searchBackButton.setOnClickListener {
             finish()
         }
 
