@@ -1,16 +1,23 @@
 package com.example.worldinalbum.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListAdapter
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
 import com.example.worldinalbum.R
 import com.example.worldinalbum.adapter.TodayGoodWordAdapter
+import com.example.worldinalbum.adapter.ViewPagerAdapter
 import com.example.worldinalbum.databinding.FragmentMainSearchBinding
+import com.example.worldinalbum.model.ViewPagerData
 import com.example.worldinalbum.retrofit.SearchPhotoViewModel
+import com.google.android.material.tabs.TabLayout
 
 
 class MainSearchFragment : Fragment() {
@@ -18,7 +25,11 @@ class MainSearchFragment : Fragment() {
     private var _binding : FragmentMainSearchBinding? = null
     val binding get() = _binding!!
 
+//    private val viewModel : SearchPhotoViewModel by viewModels()
+
     private val goodWordList = mutableListOf<String>()
+
+    private val searchTermList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +49,24 @@ class MainSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        val viewpager = view.findViewById<ViewPager2>(R.id.main_search_frag_viewpager)
+//        val indicator = view.findViewById<TabLayout>(R.id.main_search_frag_indicator)
+//
+//        searchTermList.add("apple")
+//        searchTermList.add("dog")
+//        searchTermList.add("cat")
+//        searchTermList.add("car")
+//        searchTermList.add("moon")
+//        searchTermList.add("winter")
+//        searchTermList.add("gold")
+//        searchTermList.add("red")
+//        searchTermList.add("photo")
+//        searchTermList.add("man")
+//
+//        viewModel.viewModelGetPhoto(searchTermList.random())
+//
+//        viewpager.adapter = ViewPagerAdapter()
 
         goodWordList.add("우리는 일 년 후면 다 잊어버릴 슬픔을 간직하느라고 \n" +
                 "무엇과도 바꿀 수 없는 소중한 시간을 버리고 있습니다. \n" +
@@ -163,6 +192,12 @@ class MainSearchFragment : Fragment() {
         goodWordListview.adapter = TodayGoodWordAdapter(randomGoodWord)
 
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//
+//        viewModel.viewModelGetPhoto(searchTermList.random())
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

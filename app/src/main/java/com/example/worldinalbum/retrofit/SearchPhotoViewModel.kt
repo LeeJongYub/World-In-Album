@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.worldinalbum.model.RecommendSearchData
+import com.example.worldinalbum.model.ViewPagerData
 import kotlinx.coroutines.launch
 
 class SearchPhotoViewModel : ViewModel() {
@@ -52,4 +53,5 @@ class SearchPhotoViewModel : ViewModel() {
         _photoLiveData.value = searchDataList
 
     }
+
 }
