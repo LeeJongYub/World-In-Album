@@ -8,6 +8,6 @@ class RoomRepository {
 
     fun saveImages(myEntity: MyEntity) = db.myDao().saveImage(myEntity)
 
-//    fun getImages() = db.myDao().getImage()
+    fun getImages() = db.myDao().getImage()
 
 }

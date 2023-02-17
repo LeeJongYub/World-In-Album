@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
@@ -16,16 +19,22 @@ import com.example.worldinalbum.adapter.SearchResultAdapter
 import com.example.worldinalbum.constants.MyApp
 import com.example.worldinalbum.databinding.FragmentMainPickBinding
 import com.example.worldinalbum.model.RecommendSearchData
+import com.example.worldinalbum.room.MyEntity
+import com.example.worldinalbum.room.RoomViewModel
 
 
-class MainPickFragment : Fragment(){
+class MainPickFragment : Fragment() {
 
-    private var _binding : FragmentMainPickBinding? = null
+    private var _binding: FragmentMainPickBinding? = null
     val binding get() = _binding!!
 
-    private lateinit var mainPickAdapter: MainPickAdapter
-
     val getUrls = ArrayList<String>()
+
+    lateinit var mainPickAdapter: MainPickAdapter
+
+    val urlsList = ArrayList<String>()
+
+    private val viewModel: RoomViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +51,7 @@ class MainPickFragment : Fragment(){
         return binding.root
     }
 
-    fun getImageUrl(url : ArrayList<String>) {
+    fun getImageUrl(url: ArrayList<String>) {
 
         getUrls.add(url.toString())
         Log.d("getUrls", getUrls.toString())
@@ -52,14 +61,28 @@ class MainPickFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainPickAdapter = MainPickAdapter(getUrls)
+        viewModel.getImagesVM()
 
-        val mainPickRv = binding.mainPickFragRecyclerview
+        val rv = binding.mainPickFragRecyclerview
 
-        mainPickRv.adapter = mainPickAdapter
-        mainPickRv.layoutManager = LinearLayoutManager(MyApp.instance, LinearLayoutManager.VERTICAL, false)
+        viewModel.roomSaveImageLiveData.observe(viewLifecycleOwner, Observer {
+            // it : [MyEntity(id=1, thumbnailUrl=https://images.unsplash.com/photo-
 
-        Log.d("getUrlsList", getUrls.toString())
+            for (item in it) {
+
+                val url = item.thumbnailUrl
+                // url : https://images.unsplash.com/photo1, https://images.unsplash.com/photo2
+                urlsList.add(url)
+
+            }
+
+                mainPickAdapter = MainPickAdapter(urlsList)
+                Log.d("urlList2", urlsList.toString())
+                rv.adapter = mainPickAdapter
+                rv.layoutManager = LinearLayoutManager(MyApp.instance)
+
+        })
+
     }
 
     override fun onDestroy() {

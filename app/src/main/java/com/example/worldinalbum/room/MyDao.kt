@@ -13,6 +13,6 @@ interface MyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveImage(myEntity: MyEntity)
 
-//    @Query("SELECT * FROM my_table")
-//    fun getImage() : Flow<List<MyEntity>>
+    @Query("SELECT * FROM my_table")
+    fun getImage() : List<MyEntity>
 }

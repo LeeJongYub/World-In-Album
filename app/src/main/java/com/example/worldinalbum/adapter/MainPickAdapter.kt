@@ -13,29 +13,21 @@ import com.example.worldinalbum.fragment.MainPickFragment
 
 class MainPickAdapter(val getUrlList : ArrayList<String>) : RecyclerView.Adapter<MainPickAdapter.MainPickViewHolder>() {
 
-    private val getUrlsList = MainPickFragment()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainPickViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.search_result_recyclerview_item, parent, false)
-
         return MainPickViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MainPickViewHolder, position: Int) {
-
-        val urls = getUrlsList.getUrls
-        Log.d("urls", urls.toString())
-
         Glide.with(MyApp.instance)
             .load(getUrlList[position])
-            .placeholder(R.drawable.ic_launcher_foreground)
             .into(holder.pickImage)
-        Log.d("urlList", getUrlList.toString())
     }
+
 
     override fun getItemCount(): Int {
         return getUrlList.size
-        Log.d("urlListSize", getUrlList.size.toString())
     }
 
     inner class MainPickViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {

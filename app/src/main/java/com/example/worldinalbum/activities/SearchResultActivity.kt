@@ -9,12 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.worldinalbum.adapter.SearchResultAdapter
 import com.example.worldinalbum.databinding.ActivitySearchResultBinding
 import com.example.worldinalbum.retrofit.SearchPhotoViewModel
+import com.example.worldinalbum.room.MyEntity
+import com.example.worldinalbum.room.RoomViewModel
 
 class SearchResultActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivitySearchResultBinding
 
     private val viewModel : SearchPhotoViewModel by viewModels()
+
+    private val roomViewModel : RoomViewModel by viewModels()
 
     private lateinit var searchResultAdapter: SearchResultAdapter
 
@@ -45,6 +49,7 @@ class SearchResultActivity : AppCompatActivity() {
             searchResultRV.layoutManager =
                 GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         })
+
 
     }
 

@@ -7,23 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.activities.SearchResultDetailActivity
 import com.example.worldinalbum.constants.MyApp
 import com.example.worldinalbum.fragment.MainPickFragment
 import com.example.worldinalbum.model.RecommendSearchData
+import com.example.worldinalbum.room.RoomViewModel
 
 class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
     RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
 
     // '좋아요' 클릭한 사진을 담아둘 리스트
     val selectImageList = ArrayList<String>()
-    // '좋아요' 클릭 여부에 따라 MainPickFragment 에 하트 표시할 용도
-//    val selectBooleanList = ArrayList<Boolean>()
 
     // searchResultDetailActivity 로 전달 - 사진을 '좋아요' 클릭했는지 여부
     var selectBoolean = false
+
+    // room - url 저장용 viewModel
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -70,8 +73,23 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
             Log.d("selectBoolean", selectBoolean.toString())
 
             MainPickFragment().getImageUrl(selectImageList)
+
+            // -----
+
+            val viewModel = RoomViewModel()
+
+            try {
+            viewModel.saveImagesVM(selectImageList[position])
+            } catch (e : Exception) {
+                e.printStackTrace()
+            }
+            Log.d("viewmodel", viewModel.toString())
+
+            // -----
+
         }
         holder.bind(dataList[position])
+
     }
 
     override fun getItemCount(): Int {
