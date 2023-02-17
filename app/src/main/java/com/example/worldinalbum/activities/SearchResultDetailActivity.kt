@@ -26,10 +26,6 @@ class SearchResultDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchResultDetailBinding
 
-    // 외부저장소 접근 퍼미션 허용여부
-    private var isReadPermissionGranted = false
-    private var isWritePermissionGranted = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchResultDetailBinding.inflate(layoutInflater)
@@ -58,6 +54,16 @@ class SearchResultDetailActivity : AppCompatActivity() {
         } else {
             selectBooleanImage.setImageResource(R.drawable.unlike_image)
         }
+
+        binding.searchResultDetailLikesButton.setOnClickListener {
+            if (selectBooleanData == true) {
+                selectBooleanImage.setImageResource(R.drawable.unlike_image)
+            } else {
+                selectBooleanImage.setImageResource(R.drawable.like_image)
+            }
+        }
+
+        // searchResultActivity 에 하트 클릭여부 : Boolean 데이터 넘겨주기
 
 
         // 사진 공유하기 기능 구현하기!

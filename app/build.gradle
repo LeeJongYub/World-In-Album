@@ -70,6 +70,8 @@ dependencies {
 
     // 뷰페이저
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    // 인디케이터 오픈소스
+    implementation 'com.tbuonomo:dotsindicator:4.3'
 
     // 룸
     def room_version = "2.5.0"
