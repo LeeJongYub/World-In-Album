@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
+import com.example.worldinalbum.activities.SearchResultActivity
 import com.example.worldinalbum.activities.SearchResultDetailActivity
 import com.example.worldinalbum.constants.MyApp
 import com.example.worldinalbum.fragment.MainPickFragment
@@ -79,8 +80,8 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
             val viewModel = RoomViewModel()
 
             try {
-            viewModel.saveImagesVM(selectImageList[position])
-            } catch (e : Exception) {
+                viewModel.saveImagesVM(selectImageList[position])
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             Log.d("viewmodel", viewModel.toString())

@@ -18,8 +18,6 @@ class SearchResultActivity : AppCompatActivity() {
 
     private val viewModel : SearchPhotoViewModel by viewModels()
 
-    private val roomViewModel : RoomViewModel by viewModels()
-
     private lateinit var searchResultAdapter: SearchResultAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +32,8 @@ class SearchResultActivity : AppCompatActivity() {
         // 검색어 받아옴
         val getSearchEdit = intent.getStringExtra("search_edit").toString()
 
-        Log.d("searchResult", getSearchEdit) // 받아온 검색어 확인용 로그
+        // 툴바 타이틀에 검색어 배치
+        binding.searchResultToolbarTitle.text = getSearchEdit
 
         // api
         viewModel.viewModelGetPhoto(getSearchEdit)
@@ -43,11 +42,11 @@ class SearchResultActivity : AppCompatActivity() {
 
         viewModel.photoLiveData.observe(this, Observer {
 
-
             searchResultAdapter = SearchResultAdapter(it)
             searchResultRV.adapter = searchResultAdapter
             searchResultRV.layoutManager =
                 GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+
         })
 
 
