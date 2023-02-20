@@ -1,6 +1,7 @@
 package com.example.worldinalbum.activities
 
-import android.content.*
+import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -12,92 +13,44 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
-import com.example.worldinalbum.databinding.ActivitySearchResultDetailBinding
-import java.io.*
+import com.example.worldinalbum.databinding.ActivityMainPickFragDetailBinding
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
-class SearchResultDetailActivity : AppCompatActivity() {
+class MainPickFragDetailActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySearchResultDetailBinding
+    private lateinit var binding : ActivityMainPickFragDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchResultDetailBinding.inflate(layoutInflater)
+        binding = ActivityMainPickFragDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchResultDetailBackButton.setOnClickListener {
-            finish()
-        }
+        val imageView = binding.mainPickFragDetailImage
 
-        val imageData = intent.getSerializableExtra("thumbData")
-        var selectBooleanData = intent.getBooleanExtra("likeData", false)
+        // mainPickFragment 에서 받은 url 데이터
+        val mainPickUrlData = intent.getStringExtra("url")
+        Log.d("mainPickUrlData", mainPickUrlData.toString())
 
-        val searchResultDetailImage = findViewById<ImageView>(R.id.search_result_detail_image)
-        val selectBooleanImage = findViewById<ImageView>(R.id.search_result_detail_likes_button)
+        // 받은 데이터 뷰에 배치
+        Glide.with(this)
+            .load(mainPickUrlData)
+            .into(imageView)
 
-        Log.d("imageData", imageData.toString())
-        Log.d("selectBooleanData", selectBooleanData.toString())
+        binding.mainPickFragDetailSaveButton.setOnClickListener {
 
-            // searchResultActivity 에서 받은 url 데이터
-            Glide.with(this)
-                .load(imageData.toString())
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(searchResultDetailImage)
-
-
-        if (selectBooleanData == true) {
-            selectBooleanImage.setImageResource(R.drawable.like_image)
-        } else {
-            selectBooleanImage.setImageResource(R.drawable.unlike_image)
-        }
-
-        binding.searchResultDetailLikesButton.setOnClickListener {
-            if (selectBooleanData == true) {
-                selectBooleanImage.setImageResource(R.drawable.unlike_image)
-            } else {
-                selectBooleanImage.setImageResource(R.drawable.like_image)
-            }
-        }
-
-        // searchResultActivity 에 하트 클릭여부 : Boolean 데이터 넘겨주기
-
-
-        // 사진 공유하기 기능 구현하기!
-        binding.searchResultDetailShareButton.setOnClickListener {
-
-            // 사진 url 주소를 클립보드에 저장
-            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val copyUri: Uri = Uri.parse("$imageData")
-
-            val clip: ClipData = ClipData.newUri(contentResolver, "image_url", copyUri)
-            clipboard.setPrimaryClip(clip)
-
-
-            // 사진 공유하기 - 인탠트
-            val intent = Intent(Intent.ACTION_SEND)
-            // 이미지 uri
-            val uri: Uri = Uri.parse(imageData.toString())
-            Log.d("url", uri.toString())
-
-            intent.type = ("$imageData")
-            Log.d("url", intent.type.toString())
-            intent.putExtra(Intent.EXTRA_STREAM, uri)
-            startActivity(Intent.createChooser(intent, imageData.toString()))
-        }
-
-
-        // 사진 외부저장소에 저장하기 - 이미지 저장하기 버튼 클릭시 퍼미션 허용 요청
-        binding.searchResultDetailSaveButton.setOnClickListener {
-
-            imgSaveOnClick(binding.searchResultDetailSaveButton)
+            imgSaveOnClick(binding.mainPickFragDetailSaveButton)
 
         }
+
     }
 
     //이미지 저장 버튼 클릭 메서드
@@ -155,7 +108,7 @@ class SearchResultDetailActivity : AppCompatActivity() {
             canvas.drawColor(color) // 캔버스에 현재 설정된 배경화면색으로 칠한다.
         }
 
-        val imageView = binding.searchResultDetailImage
+        val imageView = binding.mainPickFragDetailImage
         val imageViewBitmap =
             Bitmap.createBitmap(imageView.width, imageView.height, Bitmap.Config.ARGB_8888)
         val imageViewCanvas = Canvas(imageViewBitmap)

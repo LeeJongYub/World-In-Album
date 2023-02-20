@@ -15,22 +15,36 @@ class RoomViewModel : ViewModel() {
     private var _roomSaveImageLiveData = MutableLiveData<List<MyEntity>>()
     val roomSaveImageLiveData : LiveData<List<MyEntity>> get() = _roomSaveImageLiveData
 
-    fun saveImagesVM(url : String) = viewModelScope.launch(Dispatchers.IO) {
-        roomRepository.saveImages(MyEntity(0, url))
+    fun saveImagesVM(myEntity: MyEntity) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.saveImages(myEntity)
 
-        Log.d("saveImage", roomRepository.saveImages(MyEntity(0, url)).toString())
+        Log.d("saveImage", roomRepository.saveImages(myEntity).toString())
+    }
+
+    fun deleteImageVM(myEntity: MyEntity) = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.deleteImages(myEntity)
+
+        Log.d("deleteImage", roomRepository.deleteImages(myEntity).toString())
+    }
+
+    fun deleteAllImageVM() = viewModelScope.launch(Dispatchers.IO) {
+        roomRepository.deletAllImages()
+
+        Log.d("deleteAllImage", roomRepository.deletAllImages().toString())
     }
 
     fun getImagesVM() = viewModelScope.launch(Dispatchers.IO) {
-        val getImagesVM = roomRepository.getImages()
-        Log.d("getImage", getImagesVM.toString())
 
-        for (items in getImagesVM) {
-            val urls = items.thumbnailUrl
-            Log.d("getImageUrls", urls)
-        }
+//        val getImagesVM = roomRepository.getImages()
+//        Log.d("getImage", getImagesVM.toString())
+//
+//        for (items in getImagesVM) {
+//            val urls = items.thumbnailUrl
+//            Log.d("getImageUrls", urls)
+//
+//        }
 
-        _roomSaveImageLiveData.postValue(getImagesVM)
+        _roomSaveImageLiveData.postValue(roomRepository.getImages())
 
     }
 

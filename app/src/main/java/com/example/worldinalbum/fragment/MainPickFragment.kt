@@ -13,7 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
+import com.example.worldinalbum.activities.MainPickFragDetailActivity
 import com.example.worldinalbum.activities.SearchResultActivity
+import com.example.worldinalbum.activities.SearchResultDetailActivity
 import com.example.worldinalbum.adapter.MainPickAdapter
 import com.example.worldinalbum.adapter.SearchResultAdapter
 import com.example.worldinalbum.constants.MyApp
@@ -62,6 +64,17 @@ class MainPickFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getImagesVM()
+        Log.d("getImagesVM", viewModel.getImagesVM().toString())
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // room - 조회시 중복 삭제
+        // --------------------
+        urlsList.clear()
+        // --------------------
 
         val rv = binding.mainPickFragRecyclerview
 
@@ -76,13 +89,32 @@ class MainPickFragment : Fragment() {
 
             }
 
-                mainPickAdapter = MainPickAdapter(urlsList)
-                Log.d("urlList2", urlsList.toString())
-                rv.adapter = mainPickAdapter
-                rv.layoutManager = LinearLayoutManager(MyApp.instance)
+            mainPickAdapter = MainPickAdapter(urlsList)
+            Log.d("urlList2", urlsList.toString())
+            mainPickAdapter.setMyItemClickListener(object : MainPickAdapter.MyItemClickListener{
+                override fun onImageItemClick(position: Int) {
+                    val intent = Intent(requireContext(),MainPickFragDetailActivity::class.java)
+                    intent.putExtra("url", urlsList[position])
+                    startActivity(intent)
+                }
+
+                override fun onLikesItemClick(position: Int) {
+                    viewModel.deleteImageVM(MyEntity(0,urlsList.toString(),false))
+                }
+
+            })
+            rv.adapter = mainPickAdapter
+            rv.layoutManager = LinearLayoutManager(MyApp.instance)
 
         })
 
+
+
+        // 모두지우기 텍스트뷰 클릭시 모두 지우기
+        binding.mainPickFragDeleteAll.setOnClickListener {
+            viewModel.deleteAllImageVM()
+            mainPickAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroy() {

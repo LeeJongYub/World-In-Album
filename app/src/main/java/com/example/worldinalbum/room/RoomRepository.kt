@@ -10,4 +10,7 @@ class RoomRepository {
 
     fun getImages() = db.myDao().getImage()
 
+    fun deleteImages(myEntity: MyEntity) = db.myDao().deleteImage(myEntity)
+
+    fun deletAllImages() = db.myDao().deleteAllImage()
 }

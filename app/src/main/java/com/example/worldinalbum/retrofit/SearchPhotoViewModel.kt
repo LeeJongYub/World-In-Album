@@ -39,9 +39,11 @@ class SearchPhotoViewModel : ViewModel() {
             // 사진
             val thumbImage = dataItem.urls.thumb
 
+            // 하트 표시여부 체크용 boolean / false 로 초기화
+            var selected : Boolean = false
 
             // 원하는 데이터 형식(RecommendSearchData)으로 데이터를 넣고,
-            val dataIWant = RecommendSearchData(userName, createDate, likesCount, thumbImage)
+            val dataIWant = RecommendSearchData(userName, createDate, likesCount, thumbImage, selected)
 
             // 데이터리스트에 데이터형식을 넣어줌
             searchDataList.add(dataIWant)

@@ -3,6 +3,7 @@ package com.example.worldinalbum.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,9 +15,9 @@ import com.example.worldinalbum.room.RoomViewModel
 
 class SearchResultActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivitySearchResultBinding
+    private lateinit var binding: ActivitySearchResultBinding
 
-    private val viewModel : SearchPhotoViewModel by viewModels()
+    private val viewModel: SearchPhotoViewModel by viewModels()
 
     private lateinit var searchResultAdapter: SearchResultAdapter
 
@@ -42,10 +43,39 @@ class SearchResultActivity : AppCompatActivity() {
 
         viewModel.photoLiveData.observe(this, Observer {
 
+            // 올바른 검색어를 입력하였는지 확인
+            if(it.isNullOrEmpty()) {
+                Toast.makeText(this, "검색할 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
             searchResultAdapter = SearchResultAdapter(it)
             searchResultRV.adapter = searchResultAdapter
             searchResultRV.layoutManager =
                 GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+            }
+
+            // -----
+
+//            for (items in it) {
+//                val url = items.thumbnail
+//                Log.d("yes", url)
+//            }
+//            val viewModel = RoomViewModel()
+//
+//            for (items in it) {
+//                val url = items.thumbnail
+//                Log.d("url", url.toString())
+//
+//                if (getSelectBoolean == true) {
+//
+//                viewModel.saveImagesVM(MyEntity(0,url))
+//                Log.d("viewmodel", viewModel.saveImagesVM(MyEntity(0,url)).toString())
+//
+//                }
+//
+//            }
+
+            // -----
 
         })
 

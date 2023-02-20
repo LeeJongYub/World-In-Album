@@ -18,6 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+        android:id="@+id/main_pick_frag_delete_all"
+        android:text="모두 지우기"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/main_pick_frag_label"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/main_pick_frag_recyclerview"
         android:layout_width="match_parent"

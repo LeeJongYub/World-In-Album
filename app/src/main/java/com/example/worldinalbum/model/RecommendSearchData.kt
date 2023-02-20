@@ -4,5 +4,6 @@ data class RecommendSearchData(
     val userName : String,
     val uploadDate : String,
     val likesCount : Int,
-    val thumbnail : String
+    val thumbnail : String,
+    var selected : Boolean
 )
