@@ -11,10 +11,12 @@ import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.activities.SearchResultDetailActivity
 import com.example.worldinalbum.constants.MyApp
+import com.example.worldinalbum.datastore.SaveIdDatastore
 import com.example.worldinalbum.fragment.MainPickFragment
 import com.example.worldinalbum.model.RecommendSearchData
 import com.example.worldinalbum.room.MyEntity
 import com.example.worldinalbum.room.RoomViewModel
+import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
 class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
     RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
@@ -29,6 +31,9 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
     var id = 0
     // --------------------------------
 
+    // 기존 위의 id 값을 datastore 의 아이디 값으로 변경 예정
+    private lateinit var dataStoreViewModel: DataStoreViewModel
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.main_pick_frag_recyclerview_item, parent, false)
@@ -42,8 +47,13 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
             .into(holder.searchImage)
 
 
+
         val likeButtonImage = holder.searchlikeButton
         val selectedItemsImageUrl = dataList[position].thumbnail
+
+        // -----------------------------
+        dataStoreViewModel = DataStoreViewModel()
+        // -----------------------------
 
         // 리사이클러뷰의 뷰 재활용 특성을 고려하여, 클릭과 무관하게 이미지 처리를 위해 구현
         if (selectImageList.contains(selectedItemsImageUrl)) {
@@ -59,7 +69,6 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
         val roomViewModel = RoomViewModel()
         // --------------------------------
 
-
         // '좋아요' 버튼을 누를 시
         likeButtonImage.setOnClickListener {
 
@@ -70,11 +79,18 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
                 likeButtonImage.setImageResource(R.drawable.unlike_image)
                 dataList[position].selected = false
                 id--
+
             } else {
                 selectImageList.add(selectedItemsImageUrl)
                 likeButtonImage.setImageResource(R.drawable.like_image)
                 dataList[position].selected = true
-                id++
+//                id++
+                // 이슈 발생(숫자 중복(2번)으로 추가됨) - datastore saveId
+                // -----------------
+                dataStoreViewModel.saveIdVM(id)
+                Log.d("countIdd_add", dataStoreViewModel.saveIdVM(id).toString())
+                // ------------------
+
             }
             Log.d("idd", id.toString())
 
@@ -87,10 +103,45 @@ class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
 
             // --------------------------------
             if (dataList[position].selected == true) {
-                roomViewModel.saveImagesVM(MyEntity(id, dataList[position].thumbnail, dataList[position].selected))
+                id++
+                roomViewModel.saveImagesVM(
+                    MyEntity(
+                        id,
+                        dataList[position].thumbnail,
+                        dataList[position].selected
+                    )
+                )
+
+                // 검색어 바꿨을 때 저장기능 수행되는지 여부
+                Log.d(
+                    "isSaveActivate",
+                    roomViewModel.saveImagesVM(
+                        MyEntity(
+                            id,
+                            dataList[position].thumbnail,
+                            dataList[position].selected
+                        )
+                    ).toString()
+                )
+                // 저장될 시, 어떤 데이터로 저장되는지 여부
+                Log.d(
+                    "whatIsSaveData",
+                    MyEntity(
+                        id,
+                        dataList[position].thumbnail,
+                        dataList[position].selected
+                    ).toString()
+                )
+
             } else {
                 // delete
-                roomViewModel.deleteImageVM(MyEntity(id, dataList[position].thumbnail, dataList[position].selected))
+                roomViewModel.deleteImageVM(
+                    MyEntity(
+                        id,
+                        dataList[position].thumbnail,
+                        dataList[position].selected
+                    )
+                )
                 id = 0
             }
 

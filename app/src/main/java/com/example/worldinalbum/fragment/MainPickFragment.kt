@@ -23,6 +23,7 @@ import com.example.worldinalbum.databinding.FragmentMainPickBinding
 import com.example.worldinalbum.model.RecommendSearchData
 import com.example.worldinalbum.room.MyEntity
 import com.example.worldinalbum.room.RoomViewModel
+import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
 
 class MainPickFragment : Fragment() {
@@ -37,6 +38,11 @@ class MainPickFragment : Fragment() {
     val urlsList = ArrayList<String>()
 
     private val viewModel: RoomViewModel by activityViewModels()
+
+    // ----------------------------
+    // 기존 위의 id 값을 datastore 의 아이디 값으로 변경 예정
+    private lateinit var dataStoreViewModel : DataStoreViewModel
+    // ----------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +72,7 @@ class MainPickFragment : Fragment() {
         viewModel.getImagesVM()
         Log.d("getImagesVM", viewModel.getImagesVM().toString())
 
+        dataStoreViewModel = DataStoreViewModel()
     }
 
     override fun onResume() {
@@ -90,32 +97,51 @@ class MainPickFragment : Fragment() {
             }
 
             mainPickAdapter = MainPickAdapter(urlsList)
-            Log.d("urlList2", urlsList.toString())
-            mainPickAdapter.setMyItemClickListener(object : MainPickAdapter.MyItemClickListener{
+
+            mainPickAdapter.setMyItemClickListener(object : MainPickAdapter.MyItemClickListener {
                 override fun onImageItemClick(position: Int) {
-                    val intent = Intent(requireContext(),MainPickFragDetailActivity::class.java)
+                    val intent = Intent(requireContext(), MainPickFragDetailActivity::class.java)
                     intent.putExtra("url", urlsList[position])
                     startActivity(intent)
                 }
 
                 override fun onLikesItemClick(position: Int) {
-                    viewModel.deleteImageVM(MyEntity(0,urlsList.toString(),false))
+
+                    var id = urlsList.indexOf(urlsList[position]).inc() // 클릭한 아이템의 인덱스 0, 1, 2 ~ , 데이터베이스의 id 값에 맞춰주기 위해 inc()를 붙임
+                    var thumbnailUrl = urlsList[position]
+
+                  viewModel.deleteImageVM(MyEntity(id, thumbnailUrl,false))
+
+                    Log.d("url2_position", urlsList.indexOf(urlsList[position]).inc().toString())
+                    Log.d("url2", urlsList[position])
+
+                    // 이슈 트래블 슈팅 - arrlist 의 배열
+                    // MyEntity(urlsList.indexOf(urlsList[position]).toString(), urlsList[position], false)
                 }
 
             })
             rv.adapter = mainPickAdapter
             rv.layoutManager = LinearLayoutManager(MyApp.instance)
-
+//            mainPickAdapter.notifyDataSetChanged()
         })
-
 
 
         // 모두지우기 텍스트뷰 클릭시 모두 지우기
         binding.mainPickFragDeleteAll.setOnClickListener {
             viewModel.deleteAllImageVM()
+
+            // 리사이클러뷰 업데이트(추가, 삭제 등)시 clear 후, 어댑터에 상황알리기 기능 추가
+            urlsList.clear()
             mainPickAdapter.notifyDataSetChanged()
+
+            // 이슈 트러블 슈팅 - datastore resetId
+            // -----------------
+            dataStoreViewModel.resetIdVM()
+            Log.d("countIdd_reset", dataStoreViewModel.resetIdVM().toString())
+            // ------------------
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

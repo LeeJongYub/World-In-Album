@@ -12,6 +12,7 @@ import com.example.worldinalbum.databinding.ActivitySearchResultBinding
 import com.example.worldinalbum.retrofit.SearchPhotoViewModel
 import com.example.worldinalbum.room.MyEntity
 import com.example.worldinalbum.room.RoomViewModel
+import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
 class SearchResultActivity : AppCompatActivity() {
 

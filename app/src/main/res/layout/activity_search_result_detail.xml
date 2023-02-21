@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchResultDetailActivity">
+    tools:context=".activities.SearchResultDetailActivity"
+    android:background="@color/light_blue2">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -29,64 +30,73 @@
                 android:id="@+id/search_result_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:layout_marginStart="40dp"
-                tools:text="검색어"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                tools:text="검색어" />
 
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
-            android:text="마음에 드는 사진을 '저장'해보아요"
-            android:padding="5dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:background="@color/light_blue"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/light_blue"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="마음에 드는 사진을 '저장'해보아요"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/search_result_detail_image"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.3"
+        android:elevation="15dp"
+        app:cardCornerRadius="10dp">
 
-    <ImageView
-        android:id="@+id/search_result_detail_likes_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="20dp"
-        android:src="@drawable/unlike_image"
-        app:layout_constraintEnd_toEndOf="@id/search_result_detail_image"
-        app:layout_constraintTop_toTopOf="@id/search_result_detail_image" />
+        <ImageView
+            android:id="@+id/search_result_detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_launcher_foreground" />
 
-    <ImageView
-        android:id="@+id/search_result_detail_share_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_baseline_share_24"
-        app:layout_constraintEnd_toStartOf="@id/search_result_detail_likes_button"
-        app:layout_constraintTop_toTopOf="@id/search_result_detail_image" />
+        <ImageView
+            android:id="@+id/search_result_detail_likes_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"
+            android:src="@drawable/unlike_image" />
+
+        <ImageView
+            android:id="@+id/search_result_detail_share_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="300dp"
+            android:src="@drawable/ic_baseline_share_24" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <Button
         android:id="@+id/search_result_detail_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="사진 저장하기"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
