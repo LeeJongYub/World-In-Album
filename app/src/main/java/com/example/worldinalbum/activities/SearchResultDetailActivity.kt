@@ -36,34 +36,16 @@ class SearchResultDetailActivity : AppCompatActivity() {
         }
 
         val imageData = intent.getSerializableExtra("thumbData")
-        var selectBooleanData = intent.getBooleanExtra("likeData", false)
 
         val searchResultDetailImage = findViewById<ImageView>(R.id.search_result_detail_image)
-        val selectBooleanImage = findViewById<ImageView>(R.id.search_result_detail_likes_button)
 
         Log.d("imageData", imageData.toString())
-        Log.d("selectBooleanData", selectBooleanData.toString())
 
             // searchResultActivity 에서 받은 url 데이터
             Glide.with(this)
                 .load(imageData.toString())
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(searchResultDetailImage)
-
-
-        if (selectBooleanData == true) {
-            selectBooleanImage.setImageResource(R.drawable.like_image)
-        } else {
-            selectBooleanImage.setImageResource(R.drawable.unlike_image)
-        }
-
-        binding.searchResultDetailLikesButton.setOnClickListener {
-            if (selectBooleanData == true) {
-                selectBooleanImage.setImageResource(R.drawable.unlike_image)
-            } else {
-                selectBooleanImage.setImageResource(R.drawable.like_image)
-            }
-        }
 
         // searchResultActivity 에 하트 클릭여부 : Boolean 데이터 넘겨주기
 

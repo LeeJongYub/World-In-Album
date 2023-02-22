@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchResultDetailActivity"
-    android:background="@color/light_blue2">
+    android:background="@color/light_blue2"
+    tools:context=".activities.SearchResultDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -52,36 +52,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:elevation="15dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        android:elevation="15dp"
-        app:cardCornerRadius="10dp">
+        app:layout_constraintVertical_bias="0.3">
 
         <ImageView
             android:id="@+id/search_result_detail_image"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:scaleType="centerCrop"
             android:layout_margin="10dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_foreground" />
-
-        <ImageView
-            android:id="@+id/search_result_detail_likes_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end"
-            android:layout_margin="20dp"
-            android:src="@drawable/unlike_image" />
 
         <ImageView
             android:id="@+id/search_result_detail_share_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_gravity="end"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="300dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/ic_baseline_share_24" />
 
     </androidx.cardview.widget.CardView>
