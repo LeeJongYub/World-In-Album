@@ -57,4 +57,13 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
+    <ListView
+        android:id="@+id/search_term_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_top_toolbar"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

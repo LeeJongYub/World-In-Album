@@ -7,8 +7,16 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.get
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
+import com.example.worldinalbum.R
+import com.example.worldinalbum.adapter.SearchAdapter
 import com.example.worldinalbum.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
@@ -17,6 +25,10 @@ class SearchActivity : AppCompatActivity() {
 
     // 키보드 설정
     private lateinit var inputMethodManager: InputMethodManager
+
+    private val searchList = mutableListOf<String>()
+
+    private lateinit var searchAdapter: SearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +49,8 @@ class SearchActivity : AppCompatActivity() {
             if (searchEdit.text.isNullOrEmpty()) {
                 searchEdit.requestFocus()
 
-                inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
 
                 Toast.makeText(this, "검색어를 입력하세요.", Toast.LENGTH_SHORT).show()
@@ -53,6 +66,39 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.searchEditText.requestFocus()
+
+        // 검색어 리스트뷰에 추가
+        val searchEditToString = binding.searchEditText.text.toString()
+
+        val searchTermListview = binding.searchTermListview
+
+
+        if (binding.searchEditText.text.isNullOrEmpty()) {
+            searchTermListview.visibility = View.GONE
+        } else {
+            searchList.add(searchEditToString)
+            searchList.distinct()
+
+            searchTermListview.visibility = View.VISIBLE
+            searchAdapter = SearchAdapter(searchList)
+            searchTermListview.adapter = searchAdapter
+        }
+
+        // 리스트뷰 클릭시 삭제
+        searchTermListview.setOnItemClickListener { parent, view, position, id ->
+
+            searchList.remove(searchList[position])
+            searchAdapter.notifyDataSetChanged()
+
+        }
 
     }
 }

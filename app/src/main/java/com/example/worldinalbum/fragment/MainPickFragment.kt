@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -41,7 +42,7 @@ class MainPickFragment : Fragment() {
 
     // ----------------------------
     // 기존 위의 id 값을 datastore 의 아이디 값으로 변경 예정
-    private lateinit var dataStoreViewModel : DataStoreViewModel
+    private lateinit var dataStoreViewModel: DataStoreViewModel
     // ----------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +98,7 @@ class MainPickFragment : Fragment() {
             }
 
             mainPickAdapter = MainPickAdapter(urlsList)
+            mainPickAdapter.notifyDataSetChanged()
 
             mainPickAdapter.setMyItemClickListener(object : MainPickAdapter.MyItemClickListener {
                 override fun onImageItemClick(position: Int) {
@@ -107,13 +109,23 @@ class MainPickFragment : Fragment() {
 
                 override fun onLikesItemClick(position: Int) {
 
-                    var id = urlsList.indexOf(urlsList[position]).inc() // 클릭한 아이템의 인덱스 0, 1, 2 ~ , 데이터베이스의 id 값에 맞춰주기 위해 inc()를 붙임
+                    val id = urlsList.indexOf(urlsList[position]).inc()
+                    // 클릭한 아이템의 인덱스 0, 1, 2 ~ , 데이터베이스의 id 값에 맞춰주기 위해 inc()를 붙임
+
                     var thumbnailUrl = urlsList[position]
+                    Log.d("url2_thumbnailUrl", urlsList[position])
+                    viewModel.deleteImageVM(MyEntity(id, thumbnailUrl, false))
 
-                  viewModel.deleteImageVM(MyEntity(id, thumbnailUrl,false))
+                    // indexOutOfBound 방지 처리
+                    if (urlsList.isNullOrEmpty()) {
+                        Toast.makeText(requireContext(), "찜한 사진이 없습니다.", Toast.LENGTH_SHORT).show()
+                        Log.d("url2_nullOrEmpty", urlsList[position])
+                    } else {
+                        urlsList.remove(thumbnailUrl)
+                        mainPickAdapter.notifyDataSetChanged()
+                    }
 
-                    Log.d("url2_position", urlsList.indexOf(urlsList[position]).inc().toString())
-                    Log.d("url2", urlsList[position])
+                    Log.d("url2_position", id.toString())
 
                     // 이슈 트래블 슈팅 - arrlist 의 배열
                     // MyEntity(urlsList.indexOf(urlsList[position]).toString(), urlsList[position], false)
