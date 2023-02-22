@@ -66,8 +66,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-
-
     }
 
     override fun onResume() {
@@ -80,12 +78,19 @@ class SearchActivity : AppCompatActivity() {
 
         val searchTermListview = binding.searchTermListview
 
-
         if (binding.searchEditText.text.isNullOrEmpty()) {
             searchTermListview.visibility = View.GONE
         } else {
-            searchList.add(searchEditToString)
-            searchList.distinct()
+            // 검색어가 5개가 넘어가면 처음 검색한 것부터 삭제되고 방금 검색한 것을 추가
+            if (searchList.size >= 5) {
+                searchList.remove(searchList[0])
+                searchList.add(searchEditToString)
+                Log.d("searchList_remove", searchList.toString())
+                // 검색어 추가
+            } else {
+                 searchList.add(searchEditToString)
+                Log.d("searchList_add", searchList.toString())
+            }
 
             searchTermListview.visibility = View.VISIBLE
             searchAdapter = SearchAdapter(searchList)
