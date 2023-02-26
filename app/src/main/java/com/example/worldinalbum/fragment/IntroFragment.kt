@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.example.worldinalbum.R
 import com.example.worldinalbum.activities.MainActivity
 import com.example.worldinalbum.databinding.FragmentIntroBinding
@@ -13,8 +14,7 @@ import com.example.worldinalbum.databinding.FragmentIntroBinding
 
 class IntroFragment : Fragment() {
 
-    private var _binding : FragmentIntroBinding? = null
-    val binding get() = _binding!!
+    private lateinit var binding : FragmentIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class IntroFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
-        _binding = FragmentIntroBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_intro, container, false)
 
         return binding.root
     }
@@ -37,8 +37,4 @@ class IntroFragment : Fragment() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 }

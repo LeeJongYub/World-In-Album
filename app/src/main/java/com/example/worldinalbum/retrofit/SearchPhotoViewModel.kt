@@ -5,19 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.worldinalbum.model.RecommendSearchData
-import com.example.worldinalbum.model.ViewPagerData
+import com.example.worldinalbum.room.MyEntity
 import kotlinx.coroutines.launch
 
 class SearchPhotoViewModel : ViewModel() {
 
     private val repository = Repository()
 
-    private val searchDataList = ArrayList<RecommendSearchData>()
+    private val searchDataList = ArrayList<MyEntity>()
 
-    private var _photoLiveData = MutableLiveData<List<RecommendSearchData>>()
+    private var _photoLiveData = MutableLiveData<List<MyEntity>>()
 
-    val photoLiveData: LiveData<List<RecommendSearchData>> get() = _photoLiveData
+    val photoLiveData: LiveData<List<MyEntity>> get() = _photoLiveData
 
     fun viewModelGetPhoto(searchTerm: String) = viewModelScope.launch {
         val data = repository.repositoryGetPhoto(searchTerm)
@@ -43,7 +42,7 @@ class SearchPhotoViewModel : ViewModel() {
             var selected : Boolean = false
 
             // 원하는 데이터 형식(RecommendSearchData)으로 데이터를 넣고,
-            val dataIWant = RecommendSearchData(userName, createDate, likesCount, thumbImage, selected)
+            val dataIWant = MyEntity(thumbnailUrl = thumbImage)
 
             // 데이터리스트에 데이터형식을 넣어줌
             searchDataList.add(dataIWant)

@@ -1,29 +1,21 @@
 package com.example.worldinalbum.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
-import androidx.fragment.app.findFragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.example.worldinalbum.R
 import com.example.worldinalbum.adapter.TodayGoodWordAdapter
 import com.example.worldinalbum.adapter.ViewPagerAdapter
 import com.example.worldinalbum.databinding.FragmentMainSearchBinding
-import com.example.worldinalbum.model.ViewPagerData
-import com.example.worldinalbum.retrofit.SearchPhotoViewModel
-import com.google.android.material.tabs.TabLayout
 
 
 class MainSearchFragment() : Fragment() {
 
-    private var _binding : FragmentMainSearchBinding? = null
-    val binding get() = _binding!!
+    private lateinit var binding : FragmentMainSearchBinding
 
     private val goodWordList = mutableListOf<String>()
 
@@ -48,7 +40,7 @@ class MainSearchFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        _binding = FragmentMainSearchBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_search, container, false)
 
         return binding.root
     }
@@ -67,11 +59,6 @@ class MainSearchFragment() : Fragment() {
         }
 
 
-        goodWordList.add("우리는 일 년 후면 다 잊어버릴 슬픔을 간직하느라고 \n" +
-                "무엇과도 바꿀 수 없는 소중한 시간을 버리고 있습니다. \n" +
-                "소심하게 굴기에 인생은 너무나 짧습니다.\n" +
-                "\n" +
-                "- 카네기 \n")
         goodWordList.add("세상은 고통으로 가득하지만\n" +
                 "그것을 극복하는 사람들로도 가득하다\n" +
                 "\n" +
@@ -95,11 +82,6 @@ class MainSearchFragment() : Fragment() {
                 "그것을 몸에 지녀라\n" +
                 "\n" +
                 "- 허버드")
-        goodWordList.add("너무 소심하고 까다롭게 자신의 행동을 고민하지 말라\n" +
-                "모든 인생은 실험이다\n" +
-                "더 많이 실험할수록 더 나아진다\n" +
-                "\n" +
-                "- 랄프 왈도 에머슨")
         goodWordList.add("어리석은 자는 멀리서 행복을 찾고\n" +
                 "현명한 자는 자신의 발치에서 행복을 키워간다\n" +
                 "\n" +
@@ -108,22 +90,10 @@ class MainSearchFragment() : Fragment() {
                 "잘할 수 있는 일에 광적으로 집중하는 것이다\n" +
                 "\n" +
                 "- 톰 모나건")
-        goodWordList.add("물러나서 조용하게 구하면 배울 수 있는 스승은 많다. \n" +
-                "사람은 가는 곳마다 보는 것마다 모두 스승으로서 배울 것이 많은 법이다. \n" +
-                "\n" +
-                "- 맹자")
-        goodWordList.add("내가 헛되이 보낸 오늘 하루는 어제 죽어간 이들이 그토록 바라던 하루이다.\n" +
-                "단 하루면 인간적인 모든 것을 멸망시킬 수 있고 다시 소생시킬 수도 있다. \n" +
-                "\n" +
-                "- 소포클레스")
         goodWordList.add("미래를 신뢰하지 마라, 죽은 과거는 묻어버려라, \n" +
                 "그리고 살아있는 현재에 행동하라. \n" +
                 "\n" +
                 "- 롱펠로")
-        goodWordList.add("가라, 달려라, 그리고 세계가 6일 동안에 만들어졌음을 잊지 말라. \n" +
-                "시간을 잘 붙잡는 사람은 모든 것을 얻을 수 있다. \n" +
-                "\n" +
-                "- 이즈 레일리")
         goodWordList.add("시간은 말로써 나타낼 수 없을 만큼 멋진 만물의 소재이다.\n" +
                 "\n" +
                 "- 아널드 버넷")
@@ -162,16 +132,6 @@ class MainSearchFragment() : Fragment() {
         goodWordList.add("지도자란 희망을 파는 상인이다.\n" +
                 "\n" +
                 "- 나폴레옹")
-        goodWordList.add("지금이야말로 일할 때다. 지금이야말로 싸울 때다.\n" +
-                "지금이야말로 나를 더 훌륭한 사람으로 만들 때다.\n" +
-                "오늘 그것을 못하면 내일 그것을 할 수 있는가.\n" +
-                "\n" +
-                "- 토마스 아켐피스 ")
-        goodWordList.add("우리는 일 년 후면 다 잊어버릴 슬픔을 간직하느라고\n" +
-                "무엇과도 바꿀 수 없는 소중한 시간을 버리고 있습니다.\n" +
-                "소심하게 굴기에 인생은 너무나 짧습니다.\n" +
-                "\n" +
-                "- 카네기 ")
         goodWordList.add("전력을 다해서 시간에 대항하라.\n" +
                 "\n" +
                 "- 톨스토이")
@@ -190,12 +150,6 @@ class MainSearchFragment() : Fragment() {
         val goodWordListview = binding.goodWordListview
         goodWordListview.adapter = TodayGoodWordAdapter(randomGoodWord)
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        _binding = null
     }
 
 }

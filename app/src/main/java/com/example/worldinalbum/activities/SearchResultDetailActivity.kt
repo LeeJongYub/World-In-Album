@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.databinding.ActivitySearchResultDetailBinding
@@ -28,24 +29,25 @@ class SearchResultDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchResultDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search_result_detail)
+        binding.searchResultDetailActivity = this@SearchResultDetailActivity
 
         binding.searchResultDetailBackButton.setOnClickListener {
             finish()
         }
 
-        val imageData = intent.getSerializableExtra("thumbData")
+        val imageData = intent.getStringExtra("thumbnail")
+        val isSelectedData = intent.getStringExtra("userName")
+
+        Log.d("isSelected", isSelectedData.toString())
 
         val searchResultDetailImage = findViewById<ImageView>(R.id.search_result_detail_image)
 
-        Log.d("imageData", imageData.toString())
-
-            // searchResultActivity 에서 받은 url 데이터
-            Glide.with(this)
-                .load(imageData.toString())
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(searchResultDetailImage)
+        // searchResultActivity 에서 받은 url 데이터
+        Glide.with(this)
+            .load(imageData.toString())
+            .placeholder(R.drawable.ic_launcher_foreground)
+            .into(searchResultDetailImage)
 
         // searchResultActivity 에 하트 클릭여부 : Boolean 데이터 넘겨주기
 

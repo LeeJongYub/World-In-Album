@@ -1,5 +1,6 @@
 package com.example.worldinalbum.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,18 +13,20 @@ import com.example.worldinalbum.databinding.ActivitySearchResultBinding
 import com.example.worldinalbum.retrofit.SearchPhotoViewModel
 import com.example.worldinalbum.room.MyEntity
 import com.example.worldinalbum.room.RoomViewModel
-import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
 class SearchResultActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchResultBinding
+    private lateinit var searchResultAdapter: SearchResultAdapter
 
     private val viewModel: SearchPhotoViewModel by viewModels()
 
-    private lateinit var searchResultAdapter: SearchResultAdapter
+    private val roomViewModel : RoomViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 뷰 바인딩 초기화
         binding = ActivitySearchResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -40,47 +43,49 @@ class SearchResultActivity : AppCompatActivity() {
         // api
         viewModel.viewModelGetPhoto(getSearchEdit)
 
+        // RecyclerView 초기화
         val searchResultRV = binding.searchResultRecyclerview
 
-        viewModel.photoLiveData.observe(this, Observer {
+        // {position -> ~ / 클릭 이벤트 처리 코드
+        searchResultAdapter = SearchResultAdapter(mutableListOf(),
+            { item ->
+
+                val intent = Intent(this, SearchResultDetailActivity::class.java)
+                intent.putExtra("thumbnail", item.thumbnailUrl)
+                startActivity(intent)
+
+
+            }) { item ->
+
+            val myEntity = MyEntity(thumbnailUrl = item.thumbnailUrl, selected = !item.selected)
+
+            if (item.selected) {
+                roomViewModel.saveImagesVM(myEntity)
+            } else {
+//                myEntity.id = item.id // 기존 엔티티의 id 값을 사용한다.
+                roomViewModel.deleteImageVM(myEntity)
+            }
+            Log.d("myEntity", myEntity.toString())
+        }
+
+        searchResultRV.adapter = searchResultAdapter
+        searchResultRV.layoutManager = GridLayoutManager(this, 2)
+
+        viewModel.photoLiveData.observe(this, Observer { entityList ->
+            val myEntityList = entityList.map { myEntity ->
+                MyEntity(
+                    thumbnailUrl = myEntity.thumbnailUrl
+                )
+            }
+            // 데이터를 어댑터에 전달합니다.
+            searchResultAdapter.setData(myEntityList)
+
 
             // 올바른 검색어를 입력하였는지 확인
-            if(it.isNullOrEmpty()) {
+            if (myEntityList.isNullOrEmpty()) {
                 Toast.makeText(this, "검색할 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
                 finish()
-            } else {
-            searchResultAdapter = SearchResultAdapter(it)
-            searchResultRV.adapter = searchResultAdapter
-            searchResultRV.layoutManager =
-                GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
             }
-
-            // -----
-
-//            for (items in it) {
-//                val url = items.thumbnail
-//                Log.d("yes", url)
-//            }
-//            val viewModel = RoomViewModel()
-//
-//            for (items in it) {
-//                val url = items.thumbnail
-//                Log.d("url", url.toString())
-//
-//                if (getSelectBoolean == true) {
-//
-//                viewModel.saveImagesVM(MyEntity(0,url))
-//                Log.d("viewmodel", viewModel.saveImagesVM(MyEntity(0,url)).toString())
-//
-//                }
-//
-//            }
-
-            // -----
-
         })
-
-
     }
-
 }

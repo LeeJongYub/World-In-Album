@@ -1,6 +1,5 @@
 package com.example.worldinalbum.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.constants.MyApp
-import com.example.worldinalbum.room.MyEntity
-import com.example.worldinalbum.room.RoomViewModel
 
 class MainPickAdapter(
     private var getUrlList: ArrayList<String>) :
@@ -48,7 +45,7 @@ class MainPickAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainPickViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.main_pick_frag_recyclerview_item, parent, false)
+            .inflate(R.layout.search_result_recyclerview_item, parent, false)
         return MainPickViewHolder(view)
     }
 

@@ -8,29 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.activities.MainPickFragDetailActivity
-import com.example.worldinalbum.activities.SearchResultActivity
-import com.example.worldinalbum.activities.SearchResultDetailActivity
 import com.example.worldinalbum.adapter.MainPickAdapter
-import com.example.worldinalbum.adapter.SearchResultAdapter
 import com.example.worldinalbum.constants.MyApp
 import com.example.worldinalbum.databinding.FragmentMainPickBinding
-import com.example.worldinalbum.model.RecommendSearchData
 import com.example.worldinalbum.room.MyEntity
 import com.example.worldinalbum.room.RoomViewModel
-import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
 
 class MainPickFragment : Fragment() {
 
-    private var _binding: FragmentMainPickBinding? = null
-    val binding get() = _binding!!
+    private lateinit var binding : FragmentMainPickBinding
 
     val getUrls = ArrayList<String>()
 
@@ -39,11 +32,6 @@ class MainPickFragment : Fragment() {
     val urlsList = ArrayList<String>()
 
     private val viewModel: RoomViewModel by activityViewModels()
-
-    // ----------------------------
-    // 기존 위의 id 값을 datastore 의 아이디 값으로 변경 예정
-    private lateinit var dataStoreViewModel: DataStoreViewModel
-    // ----------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +43,7 @@ class MainPickFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        _binding = FragmentMainPickBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_pick, container, false)
 
         return binding.root
     }
@@ -73,7 +61,6 @@ class MainPickFragment : Fragment() {
         viewModel.getImagesVM()
         Log.d("getImagesVM", viewModel.getImagesVM().toString())
 
-        dataStoreViewModel = DataStoreViewModel()
     }
 
     override fun onResume() {
@@ -109,12 +96,9 @@ class MainPickFragment : Fragment() {
 
                 override fun onLikesItemClick(position: Int) {
 
-                    val id = urlsList.indexOf(urlsList[position]).inc()
-                    // 클릭한 아이템의 인덱스 0, 1, 2 ~ , 데이터베이스의 id 값에 맞춰주기 위해 inc()를 붙임
-
                     var thumbnailUrl = urlsList[position]
                     Log.d("url2_thumbnailUrl", urlsList[position])
-                    viewModel.deleteImageVM(MyEntity(id, thumbnailUrl, false))
+                    viewModel.deleteImageVM(MyEntity(thumbnailUrl = thumbnailUrl))
 
                     // indexOutOfBound 방지 처리
                     if (urlsList.isNullOrEmpty()) {
@@ -125,10 +109,6 @@ class MainPickFragment : Fragment() {
                         mainPickAdapter.notifyDataSetChanged()
                     }
 
-                    Log.d("url2_position", id.toString())
-
-                    // 이슈 트래블 슈팅 - arrlist 의 배열
-                    // MyEntity(urlsList.indexOf(urlsList[position]).toString(), urlsList[position], false)
                 }
 
             })
@@ -145,21 +125,7 @@ class MainPickFragment : Fragment() {
             // 리사이클러뷰 업데이트(추가, 삭제 등)시 clear 후, 어댑터에 상황알리기 기능 추가
             urlsList.clear()
             mainPickAdapter.notifyDataSetChanged()
-
-            // 이슈 트러블 슈팅 - datastore resetId
-            // -----------------
-            dataStoreViewModel.resetIdVM()
-            Log.d("countIdd_reset", dataStoreViewModel.resetIdVM().toString())
-            // ------------------
         }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        _binding = null
-
     }
 
 }

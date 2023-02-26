@@ -1,178 +1,95 @@
 package com.example.worldinalbum.adapter
 
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
-import com.example.worldinalbum.activities.SearchResultDetailActivity
-import com.example.worldinalbum.constants.MyApp
-import com.example.worldinalbum.datastore.SaveIdDatastore
-import com.example.worldinalbum.fragment.MainPickFragment
-import com.example.worldinalbum.model.RecommendSearchData
+import com.example.worldinalbum.databinding.SearchResultRecyclerviewItemBinding
 import com.example.worldinalbum.room.MyEntity
-import com.example.worldinalbum.room.RoomViewModel
-import com.example.worldinalbum.viewmodel.DataStoreViewModel
 
-class SearchResultAdapter(var dataList: List<RecommendSearchData>) :
-    RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
+class SearchResultAdapter(
+    var dataList: MutableList<MyEntity>,
+    private val onClickListener: (MyEntity) -> Unit,
+    private val onItemLikedListener: (MyEntity) -> Unit,
+) : RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
 
-    // '좋아요' 클릭한 사진을 담아둘 리스트
-    val selectImageList = ArrayList<String>()
+    // 선택된 아이템의 위치를 저장할 변수
+    private var selectedItemPosition = -1
 
-    // searchResultDetailActivity 로 전달 - 사진을 '좋아요' 클릭했는지 여부
-    var selectBoolean = false
+    init {
+        for (i in 0 until dataList.size) {
+            dataList[i].selected = false
+        }
+    }
 
-    // --------------------------------
-    var id = 0
-    // --------------------------------
-
-    // 기존 위의 id 값을 datastore 의 아이디 값으로 변경 예정
-    private lateinit var dataStoreViewModel: DataStoreViewModel
+    fun setData(myEntityList: List<MyEntity>) {
+        this.dataList = myEntityList.toMutableList()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.main_pick_frag_recyclerview_item, parent, false)
-        return SearchResultViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = SearchResultRecyclerviewItemBinding.inflate(inflater, parent, false)
+        return SearchResultViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
-        Glide.with(MyApp.instance)
-            .load(dataList[position].thumbnail)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .into(holder.searchImage)
+        val item = dataList[position]
+        holder.bind(item)
 
+        // 선택된 아이템의 isSelected 속성을 true 로 설정하고,
+        // 인접한 아이템들의 isSelected 속성을 false 로 설정
+        holder.itemView.setOnClickListener {
 
-
-        val likeButtonImage = holder.searchlikeButton
-        val selectedItemsImageUrl = dataList[position].thumbnail
-
-        // -----------------------------
-        dataStoreViewModel = DataStoreViewModel()
-        // -----------------------------
-
-        // 리사이클러뷰의 뷰 재활용 특성을 고려하여, 클릭과 무관하게 이미지 처리를 위해 구현
-        if (selectImageList.contains(selectedItemsImageUrl)) {
-            // 이미 리스트에 포함되어 있다면, 하트로 사진 표시
-            likeButtonImage.setImageResource(R.drawable.like_image)
-            dataList[position].selected = true
-        } else { // 포함 X, 빈 하트로 사진 표시
-            likeButtonImage.setImageResource(R.drawable.unlike_image)
-            dataList[position].selected = false
+            if (selectedItemPosition != holder.adapterPosition) {
+                if (selectedItemPosition != -1) {
+                    dataList[selectedItemPosition].selected = false
+                    notifyItemChanged(selectedItemPosition)
+                }
+                selectedItemPosition = holder.adapterPosition
+                dataList[selectedItemPosition].selected = true
+                notifyItemChanged(selectedItemPosition)
+            }
         }
 
-        // --------------------------------
-        val roomViewModel = RoomViewModel()
-        // --------------------------------
-
-        // '좋아요' 버튼을 누를 시
-        likeButtonImage.setOnClickListener {
-
-            // 리스트에 사진 url 을 갖고 있다면,
-            if (selectImageList.contains(selectedItemsImageUrl)) {
-                // 리스트 목록에서 제거하고, 빈 하트로 사진 변경
-                selectImageList.remove(selectedItemsImageUrl)
-                likeButtonImage.setImageResource(R.drawable.unlike_image)
-                dataList[position].selected = false
-                id--
-
-            } else {
-                selectImageList.add(selectedItemsImageUrl)
-                likeButtonImage.setImageResource(R.drawable.like_image)
-                dataList[position].selected = true
-//                id++
-                // 이슈 발생(숫자 중복(2번)으로 추가됨) - datastore saveId
-                // -----------------
-                dataStoreViewModel.saveIdVM(id)
-                Log.d("countIdd_add", dataStoreViewModel.saveIdVM(id).toString())
-                // ------------------
-
-            }
-            Log.d("idd", id.toString())
-
-            Log.d("selectImageList_put", selectImageList.toString())
-            Log.d("selectImage_put", selectedItemsImageUrl)
-            Log.d("selectboolean_change", dataList[position].selected.toString())
-//            Log.d("selectBoolean_put", selectBoolean.toString())
-
-            MainPickFragment().getImageUrl(selectImageList)
-
-            // --------------------------------
-            if (dataList[position].selected == true) {
-                id++
-                roomViewModel.saveImagesVM(
-                    MyEntity(
-                        id,
-                        dataList[position].thumbnail,
-                        dataList[position].selected
-                    )
-                )
-
-                // 검색어 바꿨을 때 저장기능 수행되는지 여부
-                Log.d(
-                    "isSaveActivate",
-                    roomViewModel.saveImagesVM(
-                        MyEntity(
-                            id,
-                            dataList[position].thumbnail,
-                            dataList[position].selected
-                        )
-                    ).toString()
-                )
-                // 저장될 시, 어떤 데이터로 저장되는지 여부
-                Log.d(
-                    "whatIsSaveData",
-                    MyEntity(
-                        id,
-                        dataList[position].thumbnail,
-                        dataList[position].selected
-                    ).toString()
-                )
-
-            } else {
-                // delete
-                roomViewModel.deleteImageVM(
-                    MyEntity(
-                        id,
-                        dataList[position].thumbnail,
-                        dataList[position].selected
-                    )
-                )
-                id = 0
-            }
-
-            // --------------------------------
+        if (item.selected) {
+            holder.searchlikeButton.setImageResource(R.drawable.like_image)
+        } else {
+            holder.searchlikeButton.setImageResource(R.drawable.unlike_image)
         }
-        holder.bind(dataList[position])
 
+        holder.searchlikeButton.setOnClickListener {
+            item.selected = !item.selected // 클릭할 때마다 선택 여부 반전
+            onItemLikedListener(item)
 
+            if (item.selected) {
+                holder.searchlikeButton.setImageResource(R.drawable.like_image)
+            } else {
+                holder.searchlikeButton.setImageResource(R.drawable.unlike_image)
+            }
+        }
+        holder.itemView.setOnClickListener {
+            onClickListener(item)
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    inner class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class SearchResultViewHolder(private val binding: SearchResultRecyclerviewItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val searchImage = itemView.findViewById<ImageView>(R.id.search_result_image_item)
         val searchlikeButton = itemView.findViewById<ImageView>(R.id.search_result_likes_item)
 
-
-        fun bind(item: RecommendSearchData) {
-
-            // 수정필요 selectBoolean 및 다른것도 있는지 찾아보기
-            itemView.setOnClickListener {
-                val intent = Intent(MyApp.instance, SearchResultDetailActivity::class.java)
-                intent.putExtra("thumbData", item.thumbnail)
-                intent.putExtra("likeData", selectBoolean)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-                MyApp.instance.startActivity(intent)
-            }
+        fun bind(item: MyEntity) {
+            binding.data = item
+            Glide.with(itemView.context)
+                .load(item.thumbnailUrl)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(searchImage)
         }
     }
-
 }

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [MyEntity::class], version = 1)
+@Database(entities = [MyEntity::class], version = 2)
 abstract class MyDatabase : RoomDatabase() {
     // Dao 또한 추상 메서드로 호출한다.
     abstract fun myDao(): MyDao
@@ -14,19 +14,18 @@ abstract class MyDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var INSTANCE : MyDatabase? = null
+        private var INSTANCE: MyDatabase? = null
 
-        fun getInstance(context: Context) : MyDatabase {
+        fun getInstance(context: Context): MyDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     MyDatabase::class.java,
-                    "coin_database",
+                    "my_database",
                 ).fallbackToDestructiveMigration()
                     .build()
 
                 INSTANCE = instance
-
                 return instance
             }
         }

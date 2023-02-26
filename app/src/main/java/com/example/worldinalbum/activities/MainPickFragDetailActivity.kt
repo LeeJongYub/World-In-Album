@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.example.worldinalbum.R
 import com.example.worldinalbum.databinding.ActivityMainPickFragDetailBinding
@@ -31,8 +32,8 @@ class MainPickFragDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainPickFragDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main_pick_frag_detail)
+        binding.mainPickFragDetailActivity = this@MainPickFragDetailActivity
 
         val imageView = binding.mainPickFragDetailImage
 

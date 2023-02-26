@@ -4,17 +4,11 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.get
-import androidx.core.view.isEmpty
-import androidx.core.view.isNotEmpty
+import androidx.databinding.DataBindingUtil
 import com.example.worldinalbum.R
 import com.example.worldinalbum.adapter.SearchAdapter
 import com.example.worldinalbum.databinding.ActivitySearchBinding
@@ -32,8 +26,8 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
+        binding.searchActivity = this@SearchActivity
 
         binding.searchBackButton.setOnClickListener {
             finish()
@@ -93,9 +87,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
             searchTermListview.visibility = View.VISIBLE
+        }
             searchAdapter = SearchAdapter(searchList)
             searchTermListview.adapter = searchAdapter
-        }
 
         // 리스트뷰 클릭시 삭제
         searchTermListview.setOnItemClickListener { parent, view, position, id ->
