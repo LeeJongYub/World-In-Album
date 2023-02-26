@@ -49,54 +49,7 @@
 
 ## - 문제 아카이브 -
 
-
 ### - 문제 1 :
-
-</br>
-
-- 문제
-
-  MainPickFragment에서 MyEntity의 id 값과, 
-  
-  RoomDatabase의 id를 일치시키는 과정에서 막힘 발생
-
-</br>
-
-- 해결
-
-  MainPickAdapter에 넣게될 사진 data인 urlList의 position 값을 찾아야겠다고 생각함
-
-  1) 먼저 MainPickAdapter에서 interface(MyItemClickListener)를 선언
-
-  2) MainPickFragment에 다음과 같은 변수를 선언
-
-　　　(해당 변수가 실제 Database에서 삭제되는 id와 일치되기 때문에 문제없이 삭제됨)
-
-</br>
-
-- 코드
-```kotlin
-override fun onLikesItemClick(position: Int) {
-
-val id = urlList.indexOf(urlList[position]).inc()
-
-// view 클릭시 필요한 다른 처리
-// ~
-}
-```
-
-</br>
-
-- 코드 의도
-
-  1) 인터페이스를 통해 받은 onLikesItemClick 메소드에서 urlList의 position 값을 찾는 코드
-
-  2) .inc()는 프로젝트의 데이터베이스 id가 1부터 계수되는 것과,</br>
-    프래그먼트 urlList의 index가 0부터 계수됨을 고려하여 일치를 위해 추가함</br>
-
-</br></br></br>
-
-### - 문제 2 :
 
 </br>
 
@@ -143,7 +96,7 @@ override fun onResume() {
   
   </br></br></br>
 
-### - 문제 3 :
+### - 문제 2 :
 
 </br>
 
@@ -199,17 +152,68 @@ override fun onResume() {
   
 </br></br></br>
 
-## - 수정 필요 -
-
-1. 검색어 표시 문제 (SearchResultAcitivty -> SearchActivity 뿐만 아니라 MainActivity -> SearchActivity 때도 검색어 표시 원함)</br>
-
-    (1) Datastore를 통해 검색어들이 Activity의 생명주기와 상관없이 로컬로 저장
+### - 문제 3 :
 
 </br>
 
-2. '좋아요' 버튼이 여러 Activity, Adapter에 위치함에 따른 RoomDatabase에 데이터 추가, 삭제시 id 값 일치 문제</br>
+- 문제
 
-    (1) Database에 저장, 삭제하는 모든 부분을 Datastore를 통해 id 값이 일치되도록 리팩토링 에정
+  SearchResultActivity, MainPickFragment에서 MyEntity의 id 값과, 
+  
+  RoomDatabase의 id를 일치시키는 과정에서 막힘 발생
+
+</br>
+
+- 해결
+
+  **(수정중)**
+
+  
+  **RoomDatabase에 들어갈 데이터 중 id 값을 Entity에서 0으로 초기화 하는 것이 아닌, Activity 등에서 임의로 값을 부여하는 것은</br>
+  실질적인 해결방법이 아니고 오히려 database에 추가, 삭제시 문제를 유발하는 것을 확인하여 수정 진행중**
+  
+  ~~MainPickAdapter에 넣게될 사진 data인 urlList의 position 값을 찾아야겠다고 생각함~~
+
+  ~~1) 먼저 MainPickAdapter에서 interface(MyItemClickListener)를 선언~~
+
+  ~~2) MainPickFragment에 다음과 같은 변수를 선언~~
+
+　　　~~(해당 변수가 실제 Database에서 삭제되는 id와 일치되기 때문에 문제없이 삭제됨)~~
+
+</br>
+
+- 코드 
+
+</br>
+
+  &nbsp;&nbsp;&nbsp;&nbsp; ~~override fun onLikesItemClick(position: Int) {~~
+
+  &nbsp;&nbsp;&nbsp;&nbsp; ~~val id = urlList.indexOf(urlList[position]).inc()~~
+
+  &nbsp;&nbsp;&nbsp;&nbsp; ~~}~~
+
+</br>
+
+- 코드 의도
+
+  ~~1) 인터페이스를 통해 받은 onLikesItemClick 메소드에서 urlList의 position 값을 찾는 코드~~
+
+  ~~2) .inc()는 프로젝트의 데이터베이스 id가 1부터 계수되는 것과,</br>
+    프래그먼트 urlList의 index가 0부터 계수됨을 고려하여 일치를 위해 추가함</br>~~
+
+</br></br></br>
+
+## - 수정 필요 -
+
+1. **'좋아요' 버튼이 여러 Activity, Adapter에 위치함에 따른 RoomDatabase에 데이터 추가, 삭제시 id 값 일치 문제**</br>
+
+    **(1) 기존에 Datastore를 통해서 해결하려 했으나, 해결방안이 아닌 것 같아 RoomDatabase에 데이터 추가, 삭제시 id값 매핑 진행중**
+
+</br>
+
+2. 검색어 표시 문제 (SearchResultAcitivty -> SearchActivity 뿐만 아니라 MainActivity -> SearchActivity 때도 검색어 표시 원함)</br>
+
+    (1) Datastore를 통해 검색어들이 Activity의 생명주기와 상관없이 로컬로 저장
 
 </br>
 
